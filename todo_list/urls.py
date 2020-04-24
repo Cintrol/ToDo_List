@@ -20,4 +20,5 @@ from main.views import main_view
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', main_view),
+    path('list/',list_item_view)
 ]
