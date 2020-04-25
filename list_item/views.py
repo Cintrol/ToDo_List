@@ -3,7 +3,7 @@ from django.shortcuts import render
 
 # Create your views here.
 
-ddata = {
+data = {
     'lists':[
         {'name': 'Купить шарики', 'is_done': False, 'date': '01.02.1998'},
         {'name': 'Заказать торт', 'is_done': False, 'date': ''},
@@ -14,5 +14,5 @@ ddata = {
 
 
 def list_item_view(request):
-    context = ddata
+    context = data
     return render(request, 'list.html', context)
