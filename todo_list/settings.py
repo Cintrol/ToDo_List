@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main',
-    'list_item'
+    'list_item',
+    'main.templatetags'
 ]
 
 MIDDLEWARE = [
@@ -118,6 +119,8 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+#Count DIV blocks in page
+div_count = 6
 
 
 # Static files (CSS, JavaScript, Images)

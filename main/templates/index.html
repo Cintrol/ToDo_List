@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+    {% load get_blocks %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -78,6 +79,14 @@
                     </div>
                 </div>
             {% endfor %}
+            {% if lists|length < 6  %}
+                {% for i in lists|get_count %}
+                     <div class="table-data__table-row">
+                        <div class="table-row_table_cell-1">
+                        </div>
+                     </div>
+                {% endfor %}
+            {% endif %}
         </div>
     </section>
 
