@@ -1,13 +1,15 @@
 from django.contrib import admin
-from list_item.models import ListItemModel
+from list_item.models import TaskModel
 
 
-class ListItemAdmin(admin.ModelAdmin):
+class TaskAdmin(admin.ModelAdmin):
     """
     Регистрируем модель по задачам в админке
     """
-    list_display = ['id','name', 'created','modified','list', 'is_done','expare_date']
-    list_filter = ['name', 'list']
-    search_fields = ['name', 'is_done']
+    task_display = ['id', 'name', 'created', 'modified', 'purpose', 'is_done',
+                    'expare_date']
+    task_filter = ['name', 'purpose', 'user']
+    search_fields = ['name', 'purpose', 'user', 'is_done']
 
-admin.site.register(ListItemModel, ListItemAdmin)
+
+admin.site.register(TaskModel, TaskAdmin)

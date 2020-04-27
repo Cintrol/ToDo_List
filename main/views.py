@@ -1,13 +1,31 @@
-from django.shortcuts import render
-from main.models import ListModel
+from django.shortcuts import render,redirect, reverse
+from main.models import PurposeModel
+from main.forms import PurposeForm
 
 def main_view(request, pk=0):
-    lists = ListModel.objects.all()
-    lists_one = ListModel.objects.get(name='Learn')
-    lists_filter = ListModel.objects.filter(name='Learn')
-    context = dict(lists=lists, user=request.user)
+    """
+    Отрисовка главной страницы = список целей
+    """
+    user = request.user
+    purposes = PurposeModel.objects.filter(
+        user=user,
+    ).order_by(
+        'created'
+    )
+    context = dict(purposes=purposes, user=request.user)
     return render(request, 'index.html', context)
 
 
+def create_view(request):
+    form = PurposeForm(request.POST)
+    # if request.method == 'POST':
+    #     form = PurposeForm(data=request.POST)
+    success_url = reverse('main:main')
+    if form.is_valid():
+        form.save()
+        return redirect(success_url)
+    return render(request, "new_purpose.html", {'form':form})
+
+
 def edit_view(request, pk):
-   return 'hello'
+    pass

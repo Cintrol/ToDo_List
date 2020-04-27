@@ -1,14 +1,14 @@
 from django.db import models
 
 
-class ListItemModel(models.Model):
+class TaskModel(models.Model):
  """
  Модель списка дел внутри задачи
  """
- name = models.CharField(max_length=130, verbose_name='Название дела')
+ name = models.CharField(max_length=130, verbose_name='Название задачи')
  created = models.DateTimeField(auto_now_add=True)
  modified = models.DateTimeField(auto_now=True)
- list = models.ForeignKey('main.ListModel', on_delete=models.CASCADE)
+ purpose = models.ForeignKey('main.PurposeModel', on_delete=models.CASCADE, verbose_name='Цель')
  is_done = models.BooleanField(default=False)
  expare_date = models.DateTimeField(auto_now=True)
 
