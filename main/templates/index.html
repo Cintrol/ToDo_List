@@ -10,7 +10,7 @@
     {% for purpose in purposes %}
         <div class="table-data__table-row">
             <div class="table-row_table_cell-1">
-                {% if list.is_done %}
+                {% if purpose.is_done %}
                     <a href="#"><li class="is_done_text">{{ purpose.name }}</li></a>
                 {% else %}
                     <a   href="#"><li>{{ purpose.name }}</li></a>

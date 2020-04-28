@@ -1,18 +1,19 @@
 from django.shortcuts import render
-
+from list_item.models import TaskModel
 
 # Create your views here.
 
-data = {
-    'lists':[
-        {'name': 'Купить шарики', 'is_done': False, 'date': '01.02.1998'},
-        {'name': 'Заказать торт', 'is_done': False, 'date': ''},
-        {'name': 'Купить подарок','is_done': True, 'date': '03.09.1905'}
-    ],
-    'user_name': 'admin'
-}
+def list_item_view(request, pk=0):
+    """
+    Отрисовка главной страницы = список задач
+    """
+    user = request.user
+#    purpose =
+    tasks = TaskModel.objects.filter(
+        user=user
+    ).order_by(
+        'created'
+    )
+    context = dict(tasks=tasks, user=request.user)
+    return render(request, 'index.html', context)
 
-
-def list_item_view(request):
-    context = data
-    return render(request, 'list.html', context)

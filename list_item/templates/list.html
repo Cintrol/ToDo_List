@@ -7,18 +7,18 @@
 
 {% endblock %}
 {% block body %}
-    {% for list in lists %}
+    {% for task in tasks %}
         <div class="table-data__table-row">
             <div class="table-row_table_cell-1">
-                {% if list.is_done %}
-                    <a href="#"><li class="is_done_text">{{ list.name }}</li></a>
+                {% if task.is_done %}
+                    <a href="#"><li class="is_done_text">{{ task.name }}</li></a>
                 {% else %}
-                    <a   href="#"><li>{{ list.name }}</li></a>
+                    <a   href="#"><li>{{ task.name }}</li></a>
                 {% endif %}
             </div>
             <div class="buttons">
                 <div class="table-data-two_table-icon">
-                    <a href='{% url "main:edit" pk=list.id %}'>
+                    <a href='{% url "list_item:edit" pk=task.id %}'>
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
                              xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd" clip-rule="evenodd"
@@ -42,8 +42,8 @@
     {% endfor %}
 {% endblock %}
 {% block empty_div %}
-            {% if lists|length < 6  %}
-                {% for i in lists|get_count %}
+            {% if tasks|length < 6  %}
+                {% for i in tasks|get_count %}
                      <div class="table-data__table-row">
                         <div class="table-row_table_cell-1">
                         </div>
