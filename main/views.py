@@ -23,7 +23,9 @@ def create_view(request):
         form = NewPurposeForm(request.POST)
     success_url = reverse('main:main')
     if form.is_valid():
-        form.save()
+        plus_user = form.save(commit=False)
+        plus_user.user = request.user
+        plus_user.save()
         return redirect(success_url)
     return render(request, "new_purpose.html", {'form':form})
 

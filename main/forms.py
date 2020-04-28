@@ -14,11 +14,11 @@ class NewPurposeForm(forms.ModelForm):
     """
     class Meta:
         model = PurposeModel
-        fields = ['name', 'user']
+        fields = ['name']
         name = forms.CharField(
             label='Укажите новую цель',
             required=True,
             max_length=120,
             widget=forms.TextInput()
             )
-        user = forms.CharField()
+ #      user = forms.CharField()
