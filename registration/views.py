@@ -20,6 +20,7 @@ def create_user(request):
 
 def login_view(request):
     """Логин"""
+
     form = LoginForm()
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -30,7 +31,7 @@ def login_view(request):
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
 
-            if user and user.is_avtive:
+            if user and user.is_active:
                 login(request, user)
                 return redirect(success_url)
 

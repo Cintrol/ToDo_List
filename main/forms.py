@@ -8,13 +8,16 @@ class PurposeForm(forms.ModelForm):
     pass
 
 
-class NewPurposeForm(forms.Form):
+class NewPurposeForm(forms.ModelForm):
     """
     Создание новой цели
     """
-    purpose = forms.CharField(
-        label='Укажите новую цель',
-        required=True,
-        max_length=120,
-        widget=forms.TextInput()
-    )
+    class Meta:
+        model = PurposeModel
+        fields = ['name']
+        name = forms.CharField(
+            label='Укажите новую цель',
+            required=True,
+            max_length=120,
+            widget=forms.TextInput()
+            )
