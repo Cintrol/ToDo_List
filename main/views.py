@@ -17,6 +17,7 @@ def main_view(request, pk=0):
 
 
 def create_view(request):
+    user = request.user
     form = NewPurposeForm()
     if request.method == 'POST':
         form = NewPurposeForm(request.POST)

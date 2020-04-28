@@ -18,6 +18,7 @@
           <form class="auth_form_class" action="" id="auth_form" method="POST">
               {% csrf_token %}
               {{ form.name }}
+              {{ form.user }}
 {#              <input type="text" name="login" id="input_field_email-id" maxlength="128" required="">#}
           </form>
           <div class="auth__column_right__form_footer">
