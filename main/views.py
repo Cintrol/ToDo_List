@@ -17,13 +17,13 @@ def main_view(request, pk=0):
 
 
 def create_view(request):
-    form = NewPurposeForm
+    form = NewPurposeForm()
     if request.method == 'POST':
         form = NewPurposeForm(request.POST)
     success_url = reverse('main:main')
-#    if form.is_valid():
- #       form.save()
-  #      return redirect(success_url)
+    if form.is_valid():
+        form.save()
+        return redirect(success_url)
     return render(request, "new_purpose.html", {'form':form})
 
 
