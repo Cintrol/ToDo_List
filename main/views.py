@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect, reverse
 from django.http import HttpResponseRedirect, HttpResponseNotFound
 from main.models import PurposeModel
 from main.forms import PurposeForm, NewPurposeForm
+from list_item.views import list_item_view
 
 def main_view(request, pk=0):
     """
@@ -44,3 +45,16 @@ def edit_view(request, pk):
             return render(request, "edit_purpose.html", {'form': form})
     except PurposeModel.DoesNotExist:
         return HttpResponseNotFound("<h2>'Запись не обнаружена</h2>")
+
+
+def delete_view(request, pk):
+    try:
+        delete_purpose = PurposeModel.objects.get(id=pk)
+        delete_purpose.delete()
+        return HttpResponseRedirect("/")
+    except PurposeModel.DoesNotExist:
+        return HttpResponseNotFound("<h2>'Запись не обнаружена</h2>")
+
+
+def to_list_view(request, pk):
+    pass

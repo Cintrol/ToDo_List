@@ -7,13 +7,15 @@ def list_item_view(request, pk=0):
     """
     Отрисовка главной страницы = список задач
     """
-    user = request.user
+#    user = request.user
 #    purpose =
     tasks = TaskModel.objects.filter(
-        user=user
+#        user=user
     ).order_by(
         'created'
     )
-    context = dict(tasks=tasks, user=request.user)
-    return render(request, 'index.html', context)
+    context = dict(tasks=tasks)#, user=request.user)
+    return render(request, 'list.html', context)
 
+def edit_list_view(request, pk):
+    pass
