@@ -43,4 +43,4 @@ def edit_view(request, pk):
         else:
             return render(request, "edit_purpose.html", {'form': form})
     except PurposeModel.DoesNotExist:
-            return HttpResponseNotFound("<h2>'Запись не обнаружена</h2>")
+        return HttpResponseNotFound("<h2>'Запись не обнаружена</h2>")
