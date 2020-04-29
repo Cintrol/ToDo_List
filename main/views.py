@@ -1,4 +1,5 @@
 from django.shortcuts import render,redirect, reverse
+from django.http import HttpResponseRedirect, HttpResponseNotFound
 from main.models import PurposeModel
 from main.forms import PurposeForm, NewPurposeForm
 
@@ -31,4 +32,15 @@ def create_view(request):
 
 
 def edit_view(request, pk):
-    pass
+    form = PurposeForm
+
+    try:
+        edit_purpose = PurposeModel.objects.get(id=pk)
+        if request.method == 'POST':
+            edit_purpose.name = request.POST.get('name')
+            edit_purpose.save()
+            return HttpResponseRedirect("/")
+        else:
+            return render(request, "edit_purpose.html", {'form': form})
+    except PurposeModel.DoesNotExist:
+            return HttpResponseNotFound("<h2>'Запись не обнаружена</h2>")

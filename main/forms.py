@@ -5,8 +5,15 @@ class PurposeForm(forms.ModelForm):
     """
     Редактирование существующей цели
     """
-    pass
-
+    class Meta:
+        model = PurposeModel
+        fields = ['name']
+        name = forms.CharField(
+            label='Укажите новое наименование',
+            required=True,
+            max_length=120,
+            widget=forms.TextInput()
+            )
 
 class NewPurposeForm(forms.ModelForm):
     """
