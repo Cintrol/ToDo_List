@@ -1,18 +1,19 @@
 from django.shortcuts import render, redirect, reverse
 from list_item.models import TaskModel
-from list_item.forms import NewTaskForm
+from list_item.forms import NewTaskForm, EditTaskForm
 from main.models import PurposeModel
+from django.http import HttpResponseRedirect, HttpResponseNotFound
 
 
 # Create your views here.
 
-def list_item_view(request, pk=0):
+def list_item_view(request, pk):
     """
     Отрисовка главной страницы = список задач
     """
     user = request.user
     tasks = TaskModel.objects.filter(
-        purpose_id=pk
+        purpose=pk
     ).order_by(
         'created'
     )
@@ -26,20 +27,31 @@ def list_item_view(request, pk=0):
 
 
 def edit_list_view(request, pk):
-    pass
+    form = EditTaskForm
+
+    try:
+        edit_task = TaskModel.objects.get(id=pk)
+        if request.method == 'POST':
+            edit_task.name = request.POST.get('name')
+            edit_task.save()
+            return HttpResponseRedirect("/")
+        else:
+            return render(request, "edit_task.html", {'form': form, 'pk':pk})
+    except PurposeModel.DoesNotExist:
+        return HttpResponseNotFound("<h2>'Запись не обнаружена</h2>")
 
 
 def create_list_view(request, pk):
     """ Создать новую задачу """
-    user = request.user
+
     form = NewTaskForm()
 
     if request.method == 'POST':
         form = NewTaskForm(request.POST)
-    success_url = reverse('main:main')
+    success_url = reverse('list_item:list_item', kwargs={'pk': pk})
     if form.is_valid():
-        plus_user = form.save(commit=False)
-        plus_user.user = request.user
-        plus_user.save()
+        plus_purpose = form.save(commit=False)
+        plus_purpose.purpose = PurposeModel.objects.filter(id=pk).first()
+        plus_purpose.save()
         return redirect(success_url)
-    return render(request, "new_purpose.html", {'form': form})
+    return render(request, "new_task.html", {'form': form, 'pk':pk})

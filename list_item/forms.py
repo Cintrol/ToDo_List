@@ -4,29 +4,41 @@ from django.core.exceptions import NON_FIELD_ERRORS
 
 class NewTaskForm(forms.ModelForm):
     """
-    Создание новой цели
+    Создание новой задачи
     """
     class Meta:
         model = TaskModel
-        fields = ['name', 'purpose']
+        fields = ['name', 'expare_date']
         name = forms.CharField(
             label='Укажите новую задачу',
             required=True,
             max_length=120,
             widget=forms.TextInput()
             )
+        expare_date = forms.DateTimeField(
+            required=False,
+            widget=forms.DateInput(attrs={type: 'date'})
+        )
+        NON_FIELD_ERRORS: {
+            'unique_together': 'Имя уже существует'
+        }
 
-class PurposeForm(forms.ModelForm):
+
+class EditTaskForm(forms.ModelForm):
     """
-    Редактирование существующей цели
+    Редактирование существующей задачи
     """
-    name = forms.CharField(
-        label='Укажите новое наименование',
-        required=True,
-        max_length=120,
-        widget=forms.TextInput()
-    )
-    expiere_date = forms.DateTimeField()
     class Meta:
         model = TaskModel
-        fields = ['name', 'expiere_date']
+        fields = ['name', 'expare_date']
+        name = forms.CharField(
+            label='Укажите новое наименование',
+            required=True,
+            max_length=120,
+            widget=forms.TextInput()
+        )
+        expare_date = forms.DateTimeField(
+            label = 'укажите новую дату завершения',
+            required=False,
+            widget=forms.DateInput(attrs={type: 'date'})
+        )
