@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, reverse
 from list_item.models import TaskModel
-from list_item.forms import NewTaskForm, EditTaskForm
+from list_item.forms import TaskForm
 from main.models import PurposeModel
 from django.http import HttpResponseRedirect, HttpResponseNotFound
 
@@ -27,15 +27,23 @@ def list_item_view(request, pk):
 
 
 def edit_list_view(request, pk):
-    form = EditTaskForm
 
+    edit_task = TaskModel.objects.get(id=pk)
+    purpose = edit_task.purpose
+    purpose_id = edit_task.purpose_id
     try:
-        edit_task = TaskModel.objects.get(id=pk)
+
         if request.method == 'POST':
-            edit_task.name = request.POST.get('name')
-            edit_task.save()
-            return HttpResponseRedirect("/")
+            form = TaskForm({
+                'name': request.POST['name'],
+                'expare_date':request.POST['expare_date'],
+                'purpose': purpose_id
+            })
+            form.save()
+            success_url = reverse('list_item:list_item',kwargs={'pk': purpose_id})
+            return redirect(success_url)
         else:
+            form = TaskForm
             return render(request, "edit_task.html", {'form': form, 'pk':pk})
     except PurposeModel.DoesNotExist:
         return HttpResponseNotFound("<h2>'Запись не обнаружена</h2>")
@@ -43,15 +51,14 @@ def edit_list_view(request, pk):
 
 def create_list_view(request, pk):
     """ Создать новую задачу """
-
-    form = NewTaskForm()
-
-    if request.method == 'POST':
-        form = NewTaskForm(request.POST)
+    form = TaskForm()
     success_url = reverse('list_item:list_item', kwargs={'pk': pk})
-    if form.is_valid():
-        plus_purpose = form.save(commit=False)
-        plus_purpose.purpose = PurposeModel.objects.filter(id=pk).first()
-        plus_purpose.save()
+    if request.method == 'POST':
+        form = TaskForm({
+            'name': request.POST['name'],
+            'expare_date': request.POST['expare_date'],
+            'purpose': pk
+        })
+        form.save()
         return redirect(success_url)
     return render(request, "new_task.html", {'form': form, 'pk':pk})

@@ -17,7 +17,10 @@
           </div>
           <form class="auth_form_class" action="" id="auth_form" method="POST">
               {% csrf_token %}
-              {{ form }}
+              <a>Укажите новое название задачи</a>
+              {{ form.name }}
+              <a>Укажите новую дату окончания</a>
+              {{ form.expare_date }}
 {#              {{ form.user }}#}
 {#              <input type="text" name="login" id="input_field_email-id" maxlength="128" required="">#}
           </form>
