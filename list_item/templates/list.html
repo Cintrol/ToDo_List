@@ -32,7 +32,7 @@
                         </svg>
                     </a>
                 </div>
-                <a class="delete_button" href="#">
+                <a class="delete_button" href="{% url "list_item:delete_edit" pk=task.id %}">
                     <div class="table-row_table_icon">
                         <svg width="20" height="22" viewBox="0 0 20 22" fill="none"
                              xmlns="http://www.w3.org/2000/svg">
