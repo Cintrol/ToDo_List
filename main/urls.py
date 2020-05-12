@@ -9,6 +9,6 @@ urlpatterns = [
     path('', main_view, name='main'),
     path('edit/<int:pk>', edit_view, name='edit'),
     path('delete/<int:pk>', delete_view, name='delete'),
-    path('create/', create_view, name = 'create'),
+    path('create/', create_view, name='create'),
     path('to_list/', to_list_view, name='review'),
 ]

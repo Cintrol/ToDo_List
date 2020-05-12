@@ -17,4 +17,7 @@ class PurposeModel(models.Model):
 
     class Meta:
         verbose_name = "Список целей"
+        unique_together = ('name', 'user')
+
+
 #        indexes =

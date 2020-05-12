@@ -8,6 +8,7 @@
     {% block title %}
 
     {% endblock %}
+
     <link rel="shortcut icon" type="image/png" href="imges/favicon.png"/>
     <link rel="stylesheet" href="/static/css/index.css">
 </head>
@@ -39,17 +40,9 @@
     <section class="wrapper__relationship">
 
         <div class="relationship__table-data">
-            <div class="table-data__table-header">
-                <div class="table-data_table-header-item-1">
-                    {% block header %}
+            {% block create %}
 
-                    {% endblock %}
-                </div>
-                <a class="add_new_list" href="/create/">
-                     <div class="header__button-create-bundle">+</div>
-                </a>
-
-            </div>
+            {% endblock %}
             {% block body %}
 
             {% endblock %}

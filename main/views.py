@@ -1,9 +1,17 @@
-from django.shortcuts import render,redirect, reverse
+from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponseRedirect, HttpResponseNotFound
 from main.models import PurposeModel
 from main.forms import PurposeForm, NewPurposeForm
 from list_item.views import list_item_view
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+from django.core.paginator import EmptyPage
+from django.core.paginator import PageNotAnInteger
 
+
+PAGE_COUNT = 6
+
+@login_required(login_url='registration/login/')
 def main_view(request, pk=0):
     """
     Отрисовка главной страницы = список целей
@@ -14,7 +22,16 @@ def main_view(request, pk=0):
     ).order_by(
         'created'
     )
-    context = dict(purposes=purposes, user=request.user)
+    paginator = Paginator(purposes, PAGE_COUNT)
+    page = request.GET.get('page')
+    page = paginator.num_pages
+    try:
+        purposes_page = paginator.page(page)
+    except PageNotAnInteger:
+        purposes_page = paginator.page(1)
+    except EmptyPage:
+        purposes_page = paginator.page(paginator.num_pages)
+    context = dict(purposes=purposes, user=request.user, page=page)
     return render(request, 'index.html', context)
 
 
@@ -57,4 +74,4 @@ def delete_view(request, pk):
 
 
 def to_list_view(request, pk):
-    pass
+    return render(request, 'list.html', pk)

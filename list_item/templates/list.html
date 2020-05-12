@@ -3,8 +3,13 @@
 {% block title %}
 <title>Список задач</title>
 {% endblock %}
-{% block header %}
-
+{% block create %}
+    <div class="table-data__table-header">
+            <div class="table-data_table-header-item-1">xnj nj lheujt</div>
+            <a class="add_new_list" href="{% url "list_item:create" %}">
+                <div class="header__button-create-bundle">+</div>
+            </a>
+    </div>
 {% endblock %}
 {% block body %}
     {% for task in tasks %}
