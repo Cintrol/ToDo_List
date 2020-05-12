@@ -3,27 +3,29 @@ from list_item.models import TaskModel
 from list_item.forms import TaskForm
 from main.models import PurposeModel
 from django.http import HttpResponseRedirect, HttpResponseNotFound
+from django.contrib.auth.decorators import login_required
 
 
-# Create your views here.
-
+@login_required(login_url='registration/login/')
 def list_item_view(request, pk):
     """
     Отрисовка главной страницы = список задач
     """
     user = request.user
     tasks = TaskModel.objects.filter(
-        purpose=pk
+        purpose=pk,
     ).order_by(
         'created'
     )
     purpose_name = PurposeModel.objects.filter(id=pk).first()
-    context = {
-        'tasks': tasks,
-        'user': user,
-        'purpose': purpose_name
-    }
-    return render(request, 'list.html', context)
+    if purpose_name in PurposeModel.objects.filter(user=user):
+        context = {
+            'tasks': tasks,
+            'user': user,
+            'purpose': purpose_name
+        }
+        return render(request, 'list.html', context)
+    return HttpResponseNotFound("<h2>Запись не обнаружена</h2>")
 
 
 def edit_list_view(request, pk):
@@ -36,13 +38,14 @@ def edit_list_view(request, pk):
             edit_task.name = request.POST['name']
             edit_task.expare_date = request.POST['expare_date']
             edit_task.save()
-            success_url = reverse('list_item:list_item',kwargs={'pk': purpose_id})
+            success_url = reverse('list_item:list_item',
+                                  kwargs={'pk': purpose_id})
             return redirect(success_url)
         else:
             form = TaskForm
             return render(request, "edit_task.html", {'form': form, 'pk':pk})
     except PurposeModel.DoesNotExist:
-        return HttpResponseNotFound("<h2>'Запись не обнаружена</h2>")
+        return HttpResponseNotFound("<h2>Запись не обнаружена</h2>")
 
 
 def create_list_view(request, pk):

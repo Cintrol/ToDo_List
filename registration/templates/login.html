@@ -23,7 +23,7 @@
         <div class="auth__column_right_form">
           <div class="auth__column_right_form__header">
             <div class="form__header_title_enter">Вход</div>
-            <div class="form__header_title_reg"><a id="registration_link" href="registration/new_user/">Регистрация</a></div>
+            <div class="form__header_title_reg"><a id="registration_link" href="{% url 'registration:new_user' %}">Регистрация</a></div>
           </div>
           <form class="auth_form_class" action="" id="auth_form" method="POST">
               {% csrf_token %}

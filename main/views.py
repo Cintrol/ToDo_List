@@ -73,5 +73,4 @@ def delete_view(request, pk):
         return HttpResponseNotFound("<h2>'Запись не обнаружена</h2>")
 
 
-def to_list_view(request, pk):
-    return render(request, 'list.html', pk)
+

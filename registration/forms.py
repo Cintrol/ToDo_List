@@ -7,6 +7,9 @@ class CustomUserForm(UserCreationForm):
     """
     Форма регистрации нового пользователя
     """
+    error_messages = {
+        'password_mismatch':'Пароли не совпадают'
+    }
     class Meta(UserCreationForm.Meta):
         model = User
         fields = UserCreationForm.Meta.fields + ('email',)

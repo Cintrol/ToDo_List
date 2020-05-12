@@ -29,12 +29,18 @@
 {#              {{ form }}#}
             <p class="form_class_name-field"> Имя</p>
             {{ form.username }}
+                {% if form.username.errors %}
+                  {{ form.username.errors }}
+                {% endif %}
             <p class="form_class_name-field">e-mail</p>
             {{ form.email }}
             <p class="form_class_name-field"> Пароль</p>
             {{ form.password1 }}
             <p class="form_class_name-field">Подтверждение пароля</p>
             {{ form.password2 }}
+                {% if form.password2.errors %}
+                  {{ form.password2.errors }}
+                {% endif %}
           </form>
           <div class="registration__column_right__form_footer">
             <label class="form_footer_button-submit">
