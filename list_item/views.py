@@ -43,7 +43,7 @@ def edit_list_view(request, pk):
             return redirect(success_url)
         else:
             form = TaskForm
-            return render(request, "edit_task.html", {'form': form, 'pk':pk})
+            return render(request, "edit_task.html", {'form': form, 'pk':pk, 'purpose_id':purpose_id})
     except PurposeModel.DoesNotExist:
         return HttpResponseNotFound("<h2>Запись не обнаружена</h2>")
 
