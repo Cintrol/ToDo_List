@@ -16,6 +16,9 @@ class CustomUserForm(UserCreationForm):
                 'unique_together': "Имя занято",
                 'unique': "Имя занято"
             },
+            'email': {
+                'unique': "Email используется"
+            },
             'password2': {
                 'password_mismatch': "Пароли не совпадают",
             }

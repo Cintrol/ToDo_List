@@ -26,16 +26,16 @@
 
           <form class="registration_form_class" action="#" id="registration_form" method="POST">
               {% csrf_token %}
-{#              {{ form }}#}
             <p class="form_class_name-field"> Имя</p>
             {{ form.username }}
                 {% if form.username.errors %}
                   {{ form.username.errors }}
                 {% endif %}
+
             <p class="form_class_name-field">e-mail</p>
             {{ form.email }}
-                {% if form.email.errors %}
-                  {{ form.email.errors }}
+                {% if error_messages %}
+                  {{ error_messages }}
                 {% endif %}
             <p class="form_class_name-field"> Пароль</p>
             {{ form.password1 }}

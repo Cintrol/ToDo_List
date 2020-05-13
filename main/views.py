@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponseRedirect, HttpResponseNotFound
 from main.models import PurposeModel
 from main.forms import PurposeForm, NewPurposeForm
-from list_item.views import list_item_view
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.core.paginator import EmptyPage
@@ -21,7 +20,7 @@ def main_view(request, pk=0):
     purposes = PurposeModel.objects.filter(
         user=user,
     ).order_by(
-        '-created'
+        'created'
     )
     paginator = Paginator(purposes, PAGE_COUNT)
     page = request.GET.get('page')
@@ -38,15 +37,16 @@ def main_view(request, pk=0):
 
 @login_required(login_url='/registration/login/')
 def create_view(request):
-    user = request.user
     form = NewPurposeForm()
     if request.method == 'POST':
-        form = NewPurposeForm(request.POST)
+        name = request.POST.get('name')
+        form = NewPurposeForm({
+            'name':name,
+            'user':request.user
+        })
     success_url = reverse('main:main')
     if form.is_valid():
-        plus_user = form.save(commit=False)
-        plus_user.user = request.user
-        plus_user.save()
+        form.save()
         return redirect(success_url)
     return render(request, "new_purpose.html", {'form':form})
 
@@ -59,7 +59,7 @@ def edit_view(request, pk):
         if request.method == 'POST':
             edit_purpose.name = request.POST.get('name')
             edit_purpose.save()
-            return HttpResponseRedirect("/")
+            return redirect(reverse('main:main'))
         else:
             return render(request, "edit_purpose.html", {'form': form})
     except PurposeModel.DoesNotExist:
@@ -70,11 +70,9 @@ def delete_view(request, pk):
     try:
         delete_purpose = PurposeModel.objects.get(id=pk)
         delete_purpose.delete()
-        return HttpResponseRedirect("/")
+        return redirect(reverse('main:main'))
     except PurposeModel.DoesNotExist:
         return HttpResponseNotFound("<h2>'Запись не обнаружена</h2>")
 
-def logout_view(request):
-    logout(request)
-    return redirect(reverse('registration:login'))
+
 

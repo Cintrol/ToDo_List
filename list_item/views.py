@@ -71,8 +71,9 @@ def create_list_view(request, pk):
             'expare_date': request.POST['expare_date'],
             'purpose': pk
         })
-        form.save()
-        return redirect(success_url)
+        if form.is_valid():
+            form.save()
+            return redirect(success_url)
     return render(request, "new_task.html", {'form': form, 'pk':pk})
 
 

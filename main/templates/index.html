@@ -59,7 +59,7 @@
             <div class="paginator_class">
                 <ul class="pagination-wrapper_button">
                     {% for page in pages %}
-                        <li><a class="active" href="/?page={{ page }}">{{ page }}</a></li>
+                        <li><a class="active" href="{% url "main:main" %}?page={{ page }}">{{ page }}</a></li>
                     {% endfor %}
                 </ul>
             </div>

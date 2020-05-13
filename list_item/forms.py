@@ -19,6 +19,9 @@ class TaskForm(forms.ModelForm):
             required=False,
             widget=forms.DateInput(attrs={type: 'date'})
         )
-        NON_FIELD_ERRORS: {
-            'unique_together': 'Имя уже существует'
+
+        error_messages = {
+            NON_FIELD_ERRORS:{
+                'unique_together': "Такая цель уже существует...",
+            }
         }
