@@ -20,3 +20,4 @@ class TaskModel(models.Model):
  class Meta:
   verbose_name = 'Список задач'
 
+

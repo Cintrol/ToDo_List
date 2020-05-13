@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, reverse
 from registration.forms import CustomUserForm, LoginForm
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
 def create_user(request):
@@ -17,7 +17,7 @@ def create_user(request):
 
     return render(request, 'registration.html', {'form': form})
 
-@login_required()
+#@login_required()
 def login_view(request):
     """Логин"""
 
@@ -36,3 +36,4 @@ def login_view(request):
                 return redirect(success_url)
 
     return render(request, 'login.html', {'form': form})
+

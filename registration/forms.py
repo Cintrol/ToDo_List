@@ -7,12 +7,20 @@ class CustomUserForm(UserCreationForm):
     """
     Форма регистрации нового пользователя
     """
-    error_messages = {
-        'password_mismatch':'Пароли не совпадают'
-    }
+
     class Meta(UserCreationForm.Meta):
         model = User
         fields = UserCreationForm.Meta.fields + ('email',)
+        error_messages = {
+            'username': {
+                'unique_together': "Имя занято",
+                'unique': "Имя занято"
+            },
+            'password2': {
+                'password_mismatch': "Пароли не совпадают",
+            }
+        }
+
 
 class LoginForm(forms.Form):
     login = forms.CharField(
@@ -25,4 +33,3 @@ class LoginForm(forms.Form):
         max_length=64,
         widget=forms.PasswordInput()
     )
-

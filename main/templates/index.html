@@ -47,12 +47,22 @@
     {% endfor %}
 {% endblock %}
 {% block empty_div %}
-            {% if purposes|length < 6  %}
-                {% for i in purposes|get_count %}
-                     <div class="table-data__table-row">
-                        <div class="table-row_table_cell-1">
-                        </div>
-                     </div>
-                {% endfor %}
-            {% endif %}
+    {% if purposes|length < 6  %}
+        {% for _ in purposes|get_count %}
+             <div class="table-data__table-row">
+                <div class="table-row_table_cell-1"></div>
+             </div>
+        {% endfor %}
+    {% endif %}
+    {% if pages.1 %}
+        <div class="table-data__table-row">
+            <div class="paginator_class">
+                <ul class="pagination-wrapper_button">
+                    {% for page in pages %}
+                        <li><a class="active" href="/?page={{ page }}">{{ page }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}

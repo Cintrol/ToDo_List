@@ -23,7 +23,7 @@
             </div>
             <div class="buttons">
                 <div class="table-data-two_table-icon">
-                    <a href='#'>
+                    <a href='{% url 'list_item:list_edit' pk=task.id %}'>
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
                              xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd" clip-rule="evenodd"
@@ -31,6 +31,13 @@
                                   fill="#FF4646"/>
                         </svg>
                     </a>
+                </div>
+                <div class="calendarik">
+                {% if task.expare_date %}
+                    {{ task.expare_date }}
+                {% else %}
+                    <img src="/static/images/calendar.png" alt="calendar" width="26px" height="24px">
+                {% endif %}
                 </div>
                 <a class="delete_button" href="{% url "list_item:delete_edit" pk=task.id %}">
                     <div class="table-row_table_icon">
@@ -47,12 +54,22 @@
     {% endfor %}
 {% endblock %}
 {% block empty_div %}
-            {% if tasks|length < 6  %}
-                {% for i in tasks|get_count %}
-                     <div class="table-data__table-row">
-                        <div class="table-row_table_cell-1">
-                        </div>
-                     </div>
-                {% endfor %}
-            {% endif %}
+    {% if tasks|length < 6  %}
+        {% for _ in tasks|get_count %}
+             <div class="table-data__table-row">
+                <div class="table-row_table_cell-1"></div>
+             </div>
+        {% endfor %}
+    {% endif %}
+    {% if pages.1 %}
+        <div class="table-data__table-row">
+            <div class="paginator_class">
+                <ul class="pagination-wrapper_button">
+                    {% for page in pages %}
+                        <li><a class="active" href="{% url 'list_item:list_item' pk=purpose.id %}/?page={{ page }}">{{ page }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}

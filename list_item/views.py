@@ -4,9 +4,13 @@ from list_item.forms import TaskForm
 from main.models import PurposeModel
 from django.http import HttpResponseRedirect, HttpResponseNotFound
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+from django.core.paginator import EmptyPage
+from django.core.paginator import PageNotAnInteger
 
+PAGE_COUNT = 6
 
-@login_required(login_url='registration/login/')
+@login_required(login_url='/registration/login/')
 def list_item_view(request, pk):
     """
     Отрисовка главной страницы = список задач
@@ -15,19 +19,28 @@ def list_item_view(request, pk):
     tasks = TaskModel.objects.filter(
         purpose=pk,
     ).order_by(
-        'created'
+        '-created'
     )
     purpose_name = PurposeModel.objects.filter(id=pk).first()
+    paginator = Paginator(tasks, PAGE_COUNT)
+    page = request.GET.get('page')
+    try:
+        tasks_page = paginator.page(page)
+    except PageNotAnInteger:
+        tasks_page = paginator.page(1)
+    except EmptyPage:
+        tasks_page = paginator.page(paginator.num_pages)
     if purpose_name in PurposeModel.objects.filter(user=user):
         context = {
-            'tasks': tasks,
+            'tasks': tasks_page.object_list,
             'user': user,
-            'purpose': purpose_name
+            'purpose': purpose_name,
+            'pages': list(paginator.page_range)
         }
         return render(request, 'list.html', context)
     return HttpResponseNotFound("<h2>Запись не обнаружена</h2>")
 
-
+@login_required(login_url='/registration/login/')
 def edit_list_view(request, pk):
 
     edit_task = TaskModel.objects.get(id=pk)
@@ -47,7 +60,7 @@ def edit_list_view(request, pk):
     except PurposeModel.DoesNotExist:
         return HttpResponseNotFound("<h2>Запись не обнаружена</h2>")
 
-
+@login_required(login_url='/registration/login/')
 def create_list_view(request, pk):
     """ Создать новую задачу """
     form = TaskForm()
@@ -61,6 +74,7 @@ def create_list_view(request, pk):
         form.save()
         return redirect(success_url)
     return render(request, "new_task.html", {'form': form, 'pk':pk})
+
 
 def delete_list_view(request, pk):
     try:
