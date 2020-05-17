@@ -1,6 +1,6 @@
 #from django.template.defaulttags import register
 from django import template
-from todo_list.settings import div_count
+from todo_list.settings import PAGE_COUNT
 register = template.Library()
 
 
@@ -9,4 +9,4 @@ def get_count(lists):
     """
     return count empty div block
     """
-    return list(range(div_count - len(lists)))
+    return list(range(PAGE_COUNT - len(lists)))

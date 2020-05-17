@@ -66,3 +66,19 @@
         </div>
     {% endif %}
 {% endblock %}
+{%  block js%}
+    <script>
+const rows = document.querySelectorAll('.table-row_table_cell-1');
+rows.forEach(handler);
+
+function  handler(row) {
+row.addEventListener('click', isDoneRequest);
+}
+
+function isDoneRequest(event) {
+    console.log('click');
+    console.log(event);
+}
+
+    </script>
+{% endblock %}

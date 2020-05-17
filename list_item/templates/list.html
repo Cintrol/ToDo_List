@@ -6,6 +6,9 @@
 {% block create %}
     <div class="table-data__table-header">
             <div class="table-data_table-header-item-1">{{purpose}}</div>
+            <a class="add_new_list" >
+                <div id="allDone" class="header__button-all-done-bundle">all done</div>
+            </a>
             <a class="add_new_list" href="{% url "list_item:create" pk=purpose.id %}">
                 <div class="header__button-create-bundle">+</div>
             </a>
@@ -14,13 +17,11 @@
 {% block body %}
     {% for task in tasks %}
         <div class="table-data__table-row">
-            <div class="table-row_table_cell-1">
                 {% if task.is_done %}
-                    <a href="{% url 'list_item:list_edit' pk=task.id %}"><li class="is_done_text">{{ task.name }}</li></a>
+                    <div id="isDone_{{ task.id }}" class="table-row_table_cell-1 is_done_text">{{ task.name }}</div>
                 {% else %}
-                    <a   href="{% url 'list_item:list_edit' pk=task.id %}"><li>{{ task.name }}</li></a>
+                     <div id="isDone_{{ task.id }}" class="table-row_table_cell-1">{{ task.name }}</div>
                 {% endif %}
-            </div>
             <div class="buttons">
                 <div class="table-data-two_table-icon">
                     <a href='{% url 'list_item:list_edit' pk=task.id %}'>
@@ -72,4 +73,90 @@
             </div>
         </div>
     {% endif %}
+{% endblock %}
+{% block js %}
+<script>
+
+document.getElementById('allDone').addEventListener('click', allDoneRequest);
+
+const rows = document.querySelectorAll('.table-row_table_cell-1');
+rows.forEach(handler);
+
+function  handler(row) {
+row.addEventListener('click', isDoneRequest);
+}
+
+function  addBlockRow(row) {
+row.classList.add('is_done_text');
+}
+
+function  removeBlockRow(row) {
+row.classList.remove('is_done_text');
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        let cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            let cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+const token = getCookie('csrftoken');
+
+function isDoneRequest(event) {
+    console.log('click');
+    const listId = document.location.href.split('/').pop();
+    const id = event.target.id.split('_').pop();
+    console.log(document.location.href.replace(listId, 'done/'));
+    const url = document.location.href.replace(listId, 'done/');
+    return fetch(url, {
+        method: 'POST',
+        headers: new Headers({'X-CSRFToken':token}),
+        redirect: "follow",
+        body: JSON.stringify({id:id})
+    }).then(respone => {
+        if (respone.status === 201){
+            if (event.target.classList.contains('is_done_text')){
+                event.target.classList.remove('is_done_text');
+            } else{
+                event.target.classList.add('is_done_text');
+            }
+        } else {
+            alert('сервер недоступен')
+        }
+    })
+ }
+
+function allDoneRequest(event) {
+console.log('click');
+const listId = document.location.href.split('/').pop();
+const url = document.location.href.replace(listId, 'all_done/');
+return fetch(url, {
+    method: 'POST',
+    headers: new Headers({'X-CSRFToken':token}),
+    redirect: "follow",
+    body: JSON.stringify({id:listId})
+}).then(response => {
+    if (response.status === 201){
+        rows.forEach(removeBlockRow)
+    } else {
+        if (response.status === 202) {
+            rows.forEach(addBlockRow)
+        }else{
+            alert('сервер недоступен')
+        }
+    }
+})
+}
+
+
+</script>
 {% endblock %}

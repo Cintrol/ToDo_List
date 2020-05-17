@@ -7,9 +7,7 @@ from django.core.paginator import Paginator
 from django.core.paginator import EmptyPage
 from django.core.paginator import PageNotAnInteger
 from django.contrib.auth import logout
-
-
-PAGE_COUNT = 6
+from todo_list.settings import PAGE_COUNT
 
 @login_required(login_url='/registration/login/')
 def main_view(request, pk=0):

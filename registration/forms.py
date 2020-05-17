@@ -16,13 +16,20 @@ class CustomUserForm(UserCreationForm):
                 'unique_together': "Имя занято",
                 'unique': "Имя занято"
             },
-            'email': {
-                'unique': "Email используется"
-            },
             'password2': {
                 'password_mismatch': "Пароли не совпадают",
             }
         }
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if User.objects.filter(email=email).first():
+            raise forms.ValidationError(
+                'E-mail используется: %(value)s',
+                code='invalid',
+                params={'value': email},
+            )
+        return email
 
 
 class LoginForm(forms.Form):

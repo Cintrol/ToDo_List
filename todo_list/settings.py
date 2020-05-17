@@ -121,7 +121,7 @@ USE_L10N = True
 
 USE_TZ = True
 #Count DIV blocks in page
-div_count = 6
+PAGE_COUNT = 6
 
 
 # Static files (CSS, JavaScript, Images)
