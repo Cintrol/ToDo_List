@@ -6,19 +6,21 @@ class TaskForm(forms.ModelForm):
     """
     Создание новой задачи
     """
+    name = forms.CharField(
+        label='Укажите новую задачу',
+        required=True,
+        max_length=120,
+        widget=forms.TextInput()
+    )
+    expare_date = forms.DateTimeField(
+        required=False,
+        widget=forms.DateInput(attrs={type: 'date'})
+    )
+
     class Meta:
         model = TaskModel
         fields = ['name', 'expare_date', 'purpose']
-        name = forms.CharField(
-            label='Укажите новую задачу',
-            required=True,
-            max_length=120,
-            widget=forms.TextInput()
-            )
-        expare_date = forms.DateTimeField(
-            required=False,
-            widget=forms.DateInput(attrs={type: 'date'})
-        )
+
 
         error_messages = {
             NON_FIELD_ERRORS:{

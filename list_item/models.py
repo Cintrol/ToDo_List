@@ -17,9 +17,9 @@ class TaskModel(models.Model):
 
     def save(self, *args, **kwargs):
         super(TaskModel, self).save(*args, **kwargs)
-        purpose_ = self.purpose_id
-        purpose_edit = PurposeModel.objects.get(id=purpose_)
-        if TaskModel.objects.filter(purpose=purpose_, is_done=False):
+
+        purpose_edit = PurposeModel.objects.get(id=self.purpose)
+        if TaskModel.objects.filter(purpose=self.purpose_id, is_done=False):
             purpose_edit.is_done = False
         else:
             purpose_edit.is_done = True

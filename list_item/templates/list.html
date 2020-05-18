@@ -67,7 +67,7 @@
             <div class="paginator_class">
                 <ul class="pagination-wrapper_button">
                     {% for page in pages %}
-                        <li><a class="active" href="{% url 'list_item:list_item' pk=purpose.id %}?page={{ page }}">{{ page }}</a></li>
+                        <a class="active" href="{% url 'list_item:list_item' pk=purpose.id %}?page={{ page }}">{{ page }}</a>
                     {% endfor %}
                 </ul>
             </div>
@@ -77,8 +77,10 @@
 {% block js %}
 <script>
 
-document.getElementById('allDone').addEventListener('click', allDoneRequest);
 
+document.getElementById('allDone').addEventListener('click', allDoneRequest);
+const listId = JSON.parse({{ purpose.id|safe }});
+const token = getCookie('csrftoken');
 const rows = document.querySelectorAll('.table-row_table_cell-1');
 rows.forEach(handler);
 
@@ -109,11 +111,10 @@ function getCookie(name) {
     return cookieValue;
 }
 
-const token = getCookie('csrftoken');
+
 
 function isDoneRequest(event) {
     console.log('click');
-    const listId = document.location.href.split('/').pop();
     const id = event.target.id.split('_').pop();
     console.log(document.location.href.replace(listId, 'done/'));
     const url = document.location.href.replace(listId, 'done/');
@@ -122,8 +123,8 @@ function isDoneRequest(event) {
         headers: new Headers({'X-CSRFToken':token}),
         redirect: "follow",
         body: JSON.stringify({id:id})
-    }).then(respone => {
-        if (respone.status === 201){
+    }).then(response => {
+        if (response.status === 201){
             if (event.target.classList.contains('is_done_text')){
                 event.target.classList.remove('is_done_text');
             } else{
@@ -136,25 +137,24 @@ function isDoneRequest(event) {
  }
 
 function allDoneRequest(event) {
-console.log('click');
-const listId = document.location.href.split('/').pop();
-const url = document.location.href.replace(listId, 'all_done/');
-return fetch(url, {
-    method: 'POST',
-    headers: new Headers({'X-CSRFToken':token}),
-    redirect: "follow",
-    body: JSON.stringify({id:listId})
-}).then(response => {
-    if (response.status === 201){
-        rows.forEach(removeBlockRow)
-    } else {
-        if (response.status === 202) {
-            rows.forEach(addBlockRow)
-        }else{
-            alert('сервер недоступен')
+    console.log('click');
+    const url = document.location.href.replace(listId, 'all_done/');
+    return fetch(url, {
+        method: 'POST',
+        headers: new Headers({'X-CSRFToken':token}),
+        redirect: "follow",
+        body: JSON.stringify({id:listId})
+    }).then(response => {
+        if (response.status === 201){
+            rows.forEach(removeBlockRow)
+        } else {
+            if (response.status === 202) {
+                rows.forEach(addBlockRow)
+            }else{
+                alert('сервер недоступен')
+            }
         }
-    }
-})
+    })
 }
 
 
