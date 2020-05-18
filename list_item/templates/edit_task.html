@@ -1,0 +1,20 @@
+{% extends "master_form.html" %}
+{% load get_blocks %}
+{% block title %}
+     Изменить задачу
+{% endblock %}
+
+{% block header %}
+    Изменить задачу
+{% endblock %}
+
+{% block form %}
+    <a>Укажите новое название задачи</a>
+    {{ form.name }}
+    <a>Укажите новую дату окончания</a>
+    {{ form.expare_date }}
+{% endblock %}
+
+{% block return %}
+    <a href='{% url "list_item:list_item" pk=purpose_id%}'>
+{% endblock %}

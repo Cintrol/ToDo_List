@@ -1,0 +1,17 @@
+{% extends "master_form.html" %}
+{% load get_blocks %}
+{% block title %}
+     Изменить цель
+{% endblock %}
+
+{% block header %}
+    Изменить цель
+{% endblock %}
+
+{% block form %}
+     {{ form.name }}
+{% endblock %}
+
+{% block return %}
+    <a href={% url "main:main" %}>
+{% endblock %}

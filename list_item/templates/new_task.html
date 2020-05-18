@@ -1,0 +1,25 @@
+{% extends "master_form.html" %}
+{% load get_blocks %}
+{% block title %}
+     Создать задачу
+{% endblock %}
+
+{% block header %}
+    Создать задачу
+{% endblock %}
+
+{% block form %}
+    <a>Название задачи</a>
+    {{ form.name }}
+          {% if form.non_field_errors  %}
+          {% for error in form.non_field_errors %}
+            {{ error }}
+          {% endfor %}
+      {% endif %}
+    <a>Дата завершения</a>
+    {{ form.expare_date }}
+{% endblock %}
+
+{% block return %}
+    <a href='{% url "list_item:list_item" pk=pk %}'>
+{% endblock %}

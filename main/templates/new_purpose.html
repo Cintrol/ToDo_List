@@ -1,0 +1,22 @@
+{% extends "master_form.html" %}
+{% load get_blocks %}
+{% block title %}
+     Новая цель
+{% endblock %}
+
+{% block header %}
+    Новая цель
+{% endblock %}
+
+{% block form %}
+    {{ form.name }}
+      {% if form.non_field_errors  %}
+          {% for error in form.non_field_errors %}
+            {{ error }}
+          {% endfor %}
+      {% endif %}
+{% endblock %}
+
+{% block return %}
+    <a href={% url "main:main" %}>
+{% endblock %}
