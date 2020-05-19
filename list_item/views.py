@@ -2,15 +2,16 @@ from django.shortcuts import render, redirect, reverse
 from list_item.models import TaskModel
 from list_item.forms import TaskForm
 from main.models import PurposeModel
-from django.http import HttpResponseRedirect, HttpResponseNotFound, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponseNotFound, \
+    HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.core.paginator import EmptyPage
 from django.core.paginator import PageNotAnInteger
 import json
 
-
 PAGE_COUNT = 6
+
 
 @login_required(login_url='/registration/login/')
 def list_item_view(request, pk):
@@ -42,9 +43,9 @@ def list_item_view(request, pk):
         return render(request, 'list.html', context)
     return HttpResponseNotFound("<h2>Запись не обнаружена</h2>")
 
+
 @login_required(login_url='/registration/login/')
 def edit_list_view(request, pk):
-
     edit_task = TaskModel.objects.get(id=pk)
     purpose_id = edit_task.purpose_id
     try:
@@ -58,9 +59,11 @@ def edit_list_view(request, pk):
             return redirect(success_url)
         else:
             form = TaskForm
-            return render(request, "edit_task.html", {'form': form, 'pk':pk, 'purpose_id':purpose_id})
+            return render(request, "edit_task.html",
+                          {'form': form, 'pk': pk, 'purpose_id': purpose_id})
     except PurposeModel.DoesNotExist:
         return HttpResponseNotFound("<h2>Запись не обнаружена</h2>")
+
 
 @login_required(login_url='/registration/login/')
 def create_list_view(request, pk):
@@ -76,18 +79,18 @@ def create_list_view(request, pk):
         if form.is_valid():
             form.save()
             return redirect(success_url)
-    return render(request, "new_task.html", {'form': form, 'pk':pk})
+    return render(request, "new_task.html", {'form': form, 'pk': pk})
+
 
 @login_required(login_url='/registration/login/')
 def delete_list_view(request, pk):
-    try:
+    if request.method == 'POST':
         delete_task = TaskModel.objects.get(id=pk)
-        purpose_id = delete_task.purpose_id
+
         delete_task.delete()
-        success_url = reverse('list_item:list_item', kwargs={'pk': purpose_id})
-        return redirect(success_url)
-    except PurposeModel.DoesNotExist:
-        return HttpResponseNotFound("<h2>'Запись не обнаружена</h2>")
+        return HttpResponse(status=201)
+    return HttpResponse(status=404)
+
 
 @login_required(login_url='/registration/login/')
 def done_view(request):
@@ -112,9 +115,8 @@ def all_done_view(request):
             task.is_done = True
         task.save()
     if purpose_:
-        #если purpose.is_done была истина, то теперь False и блоки нужно убрать
+        # если purpose.is_done была истина, то теперь False и блоки нужно убрать
         return HttpResponse(status=201)
     else:
-        #или добавить
+        # или добавить
         return HttpResponse(status=202)
-

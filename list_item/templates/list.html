@@ -1,4 +1,5 @@
 {% extends "master.html" %}
+{% load static %}
 {% load get_blocks %}
 {% block title %}
 <title>Список задач</title>
@@ -16,11 +17,11 @@
 {% endblock %}
 {% block body %}
     {% for task in tasks %}
-        <div class="table-data__table-row">
+        <div id="task_{{ task.id }}" class="table-data__table-row">
                 {% if task.is_done %}
-                    <div id="isDone_{{ task.id }}" class="table-row_table_cell-1 is_done_text">{{ task.name }}</div>
+                    <div id="isDone_{{ task.id }}" class="table-row_table_cell-1 is_done_text"><a class="task_name">{{ task.name }}</a></div>
                 {% else %}
-                     <div id="isDone_{{ task.id }}" class="table-row_table_cell-1">{{ task.name }}</div>
+                     <div id="isDone_{{ task.id }}" class="table-row_table_cell-1"><a class="task_name">{{ task.name }}</a></div>
                 {% endif %}
             <div class="buttons">
                 <div class="table-data-two_table-icon">
@@ -63,8 +64,8 @@
         {% endfor %}
     {% endif %}
     {% if pages.1 %}
-        <div class="table-data__table-row">
-            <div class="paginator_class">
+        <div  id = "paginator" class="table-data__table-row">
+            <div  class="paginator_class">
                 <ul class="pagination-wrapper_button">
                     {% for page in pages %}
                         <a class="active" href="{% url 'list_item:list_item' pk=purpose.id %}?page={{ page }}">{{ page }}</a>
@@ -75,13 +76,18 @@
     {% endif %}
 {% endblock %}
 {% block js %}
+<script> scr="{% static '/js/core.js' %}"</script>
+<script> scr="{% static '/js/token.js' %}"</script>
 <script>
 
 
-document.getElementById('allDone').addEventListener('click', allDoneRequest);
+const body = document.getElementById('body_table');
 const listId = JSON.parse({{ purpose.id|safe }});
 const token = getCookie('csrftoken');
 const rows = document.querySelectorAll('.table-row_table_cell-1');
+
+document.querySelectorAll('.delete_button').forEach(button=>button.addEventListener('click',delFunction))
+document.getElementById('allDone').addEventListener('click', allDoneRequest);
 rows.forEach(handler);
 
 function  handler(row) {
@@ -157,6 +163,61 @@ function allDoneRequest(event) {
     })
 }
 
+
+function createMessageBlock(title, text) {
+    const divBlock = document.createElement('div');
+    divBlock.className = 'wrapper__auth';
+    divBlock.id = "id_new_edit_block";
+    divBlock.innerHTML = `<div class="auth__column_right_delete"><div class="auth__column_right_delete_down"><div class="auth__column_right_form__header">${title}</div><div id="message_text" class="auth__column_right_form__text"> ${text}</div><div class="auth__column_right__form_footer"><label class="form_footer_button-submit"><input type="submit" form="auth_form" value="" style="display: none"><a href="#" id="login-submit-btn"><div class="auth__button_submit"  ><span>&#10004</span></div></a></label><label class="form_footer_button-cancel"><a href="#" id="cancel_btn"><div class="auth__button_submit" id="login-cancel-btn" ><span>&#9587</span></div></a></label></div></div></div>`;
+    return divBlock;
+}
+
+function createEmptyTableRow() {
+    const emptyRow = document.createElement('div');
+    emptyRow.className = 'table-data__table-row';
+    emptyRow.innerHTML = `<div class="table-row_table_cell-1"></div>`;
+    return emptyRow;
+}
+
+function deleteMessageBlock(event) {
+    event.preventDefault();
+    document.getElementById('id_new_edit_block').remove();
+}
+
+function deleteRecord(url, event) {
+    debugger;
+    const pk = url.split('/').pop();
+    const taskId = `task_${pk}`;
+    deleteMessageBlock(event);
+    return fetch(url,{
+        method: 'POST',
+        headers: new Headers({'X-CSRFToken':token}),
+        redirect: "follow",
+        body: JSON.stringify({id:pk})
+    }).then(response=>{
+        if (response.status === 201){
+            document.getElementById(taskId).remove();
+            body.appendChild(createEmptyTableRow());
+            body.appendChild(document.getElementById('paginator'));
+            if(body.getElementsByClassName('task_name').length ===0){
+                 location.reload()
+            }
+        }else{
+            alert('ошибка удаления')
+        }
+    })
+}
+
+function delFunction(event) {
+event.preventDefault();
+const url = event.currentTarget.href;
+const message = createMessageBlock('Alert!', 'Do you want delete this task?');
+body.appendChild(message);
+document.getElementById("login-cancel-btn").addEventListener(
+    'click', event=>deleteMessageBlock(event));
+document.getElementById("login-submit-btn").addEventListener(
+    'click', event=>deleteRecord(url, event));
+}
 
 </script>
 {% endblock %}
