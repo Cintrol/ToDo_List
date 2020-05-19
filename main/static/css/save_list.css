@@ -75,17 +75,35 @@ body {
   background-color: #FFFFFF; }
 
 
+.auth__column_right_delete {
+  width: 400px;
+  height: 195px;
+  float: right;
+  box-shadow: 0px 10px 35px 21px rgba(18,71,37,1);
+  border-radius: 10px;
+  background-color: #FFFFFF; }
+
+.auth__column_right_delete_down{
+    display: grid;
+    grid-template-columns: 1fr 5fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    align-items: center;
+    border: 2px groove;
+    border-radius: 10px;
+}
 
 .auth__column_right_form {
-  display: grid;
-  grid-template-columns: 1fr 5fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
-  align-items: center;
-  border: 2px groove;
+    display: grid;
+    grid-template-columns: 1fr 5fr 1fr;
+    grid-template-rows: 0fr 2.5fr 1fr;
+    align-items: center;
+    border: 2px groove;
+    border-radius: 10px;
 }
 
 .auth__column_right_form__header {
   text-align: center;
+  vertical-align:top;
   grid-column: 1/4;
   grid-row: 1/2;
   font-family: Inter;
@@ -93,6 +111,7 @@ body {
   font-weight: 500;
   font-size: 16px;
   line-height: 64px;
+  border-radius:10px 10px 0 0;
   background: #004949;
   color: #ffffff; }
 
@@ -220,3 +239,15 @@ body {
     color: #0085FF; }
   .auth__password_recovery a:visited {
     color: #55acfd; }
+
+.auth__column_right_form__text {
+text-align: center;
+grid-column: 1/4;
+grid-row: 1/4;
+font-family: Inter;
+font-style: normal;
+font-weight: 500;
+font-size: 16px;
+line-height: 64px;
+background: #ffffff;
+color: #035c44; }

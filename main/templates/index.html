@@ -1,6 +1,7 @@
 {% extends "master.html" %}
 {% load get_blocks %}
 {% block title %}
+{% load static %}
 <title>Главная</title>
 {% endblock %}
 {% block create %}
@@ -13,12 +14,12 @@
 {% endblock %}
 {% block body %}
     {% for purpose in purposes %}
-        <div class="table-data__table-row">
+        <div id="purpose_{{ purpose.id }}" class="table-data__table-row">
             <div class="table-row_table_cell-1">
                 {% if purpose.is_done %}
-                    <a href={% url 'list_item:list_item' pk=purpose.id %}><li class="is_done_text">{{ purpose.name }}</li></a>
+                    <a class="purpose_name" href={% url 'list_item:list_item' pk=purpose.id %}><li class="is_done_text">{{ purpose.name }}</li></a>
                 {% else %}
-                    <a href={% url 'list_item:list_item' pk=purpose.id %}><li>{{ purpose.name }}</li></a>
+                    <a class="purpose_name" href={% url 'list_item:list_item' pk=purpose.id %}><li>{{ purpose.name }}</li></a>
                 {% endif %}
             </div>
             <div class="buttons">
@@ -55,7 +56,7 @@
         {% endfor %}
     {% endif %}
     {% if pages.1 %}
-        <div class="table-data__table-row">
+        <div id = "paginator" class="table-data__table-row">
             <div class="paginator_class">
                 <ul class="pagination-wrapper_button" >
                     {% for page in pages %}
@@ -67,17 +68,85 @@
     {% endif %}
 {% endblock %}
 {%  block js%}
-    <script>
-const rows = document.querySelectorAll('.table-row_table_cell-1');
-rows.forEach(handler);
+<script> scr="{% static '/js/core.js' %}"</script>
+<script> scr="{% static '/js/token.js' %}"</script>
+<script>
 
-function  handler(row) {
-row.addEventListener('click', isDoneRequest);
+
+const body = document.getElementById('body_table');
+const token = getCookie('csrftoken');
+
+document.querySelectorAll('.delete_button').forEach(button=>button.addEventListener('click',delFunction))
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        let cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            let cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 }
 
-function isDoneRequest(event) {
-    console.log('click');
-    console.log(event);
+
+function createMessageBlock(title, text) {
+    const divBlock = document.createElement('div');
+    divBlock.className = 'wrapper__auth';
+    divBlock.id = "id_new_edit_block";
+    divBlock.innerHTML = `<div class="auth__column_right_delete"><div class="auth__column_right_delete_down"><div class="auth__column_right_form__header">${title}</div><div id="message_text" class="auth__column_right_form__text"> ${text}</div><div class="auth__column_right__form_footer"><label class="form_footer_button-submit"><input type="submit" form="auth_form" value="" style="display: none"><a href="#" id="login-submit-btn"><div class="auth__button_submit"  ><span>&#10004</span></div></a></label><label class="form_footer_button-cancel"><a href="#" id="cancel_btn"><div class="auth__button_submit" id="login-cancel-btn" ><span>&#9587</span></div></a></label></div></div></div>`;
+    return divBlock;
+}
+
+function createEmptyTableRow() {
+    const emptyRow = document.createElement('div');
+    emptyRow.className = 'table-data__table-row';
+    emptyRow.innerHTML = `<div class="table-row_table_cell-1"></div>`;
+    return emptyRow;
+}
+
+function deleteMessageBlock(event) {
+    event.preventDefault();
+    document.getElementById('id_new_edit_block').remove();
+}
+
+function deleteRecord(url, event) {
+    debugger;
+    const pk = url.split('/').pop();
+    const purposeId = `purpose_${pk}`;
+    deleteMessageBlock(event);
+    return fetch(url,{
+        method: 'POST',
+        headers: new Headers({'X-CSRFToken':token}),
+        redirect: "follow",
+        body: JSON.stringify({id:pk})
+    }).then(response=>{
+        if (response.status === 201){
+            document.getElementById(purposeId).remove();
+            body.appendChild(createEmptyTableRow());
+            body.appendChild(document.getElementById('paginator'));
+            if(body.getElementsByClassName('purpose_name').length ===0){
+                 location.reload()
+            }
+        }else{
+            alert('ошибка удаления')
+        }
+    })
+}
+
+function delFunction(event) {
+event.preventDefault();
+const url = event.currentTarget.href;
+const message = createMessageBlock('Alert!', 'Do you want delete this purpose?');
+body.appendChild(message);
+document.getElementById("login-cancel-btn").addEventListener(
+    'click', event=>deleteMessageBlock(event));
+document.getElementById("login-submit-btn").addEventListener(
+    'click', event=>deleteRecord(url, event));
 }
 
     </script>

@@ -1,12 +1,11 @@
 from django.shortcuts import render, redirect, reverse
-from django.http import HttpResponseRedirect, HttpResponseNotFound
+from django.http import HttpResponseRedirect, HttpResponseNotFound, HttpResponse
 from main.models import PurposeModel
 from main.forms import PurposeForm, NewPurposeForm
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.core.paginator import EmptyPage
 from django.core.paginator import PageNotAnInteger
-from django.contrib.auth import logout
 from todo_list.settings import PAGE_COUNT
 
 @login_required(login_url='/registration/login/')
@@ -18,7 +17,7 @@ def main_view(request, pk=0):
     purposes = PurposeModel.objects.filter(
         user=user,
     ).order_by(
-        'created'
+        '-created'
     )
     paginator = Paginator(purposes, PAGE_COUNT)
     page = request.GET.get('page')
@@ -65,12 +64,12 @@ def edit_view(request, pk):
 
 
 def delete_view(request, pk):
-    try:
+    if request.method == 'POST':
         delete_purpose = PurposeModel.objects.get(id=pk)
+        delete_purpose.taskmodel_set.all().delete()
         delete_purpose.delete()
-        return redirect(reverse('main:main'))
-    except PurposeModel.DoesNotExist:
-        return HttpResponseNotFound("<h2>'Запись не обнаружена</h2>")
+        return HttpResponse(status=201)
+    return HttpResponse(status=404)
 
 
 
